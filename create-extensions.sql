@@ -1,1 +1,2 @@
 CREATE EXTENSION pipelinedb;
+CREATE EXTENSION nats;

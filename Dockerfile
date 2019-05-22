@@ -14,9 +14,16 @@ RUN apt-get -y update \
     && curl -s http://download.pipelinedb.com/apt.sh | bash \
     && apt-get -y install pipelinedb-postgresql-11 \
     && apt-get -y install postgresql-server-dev-11 \
-    && apt-get -y install git \
     && apt-get -y install cmake \
     && apt-get purge -y --auto-remove curl
+
+# ---------------------------------------------------------------------------
+# Build and install the NATS extension
+# ---------------------------------------------------------------------------
+
+WORKDIR tmp
+COPY ext .
+RUN make clean install
 
 # ---------------------------------------------------------------------------
 # Configuration

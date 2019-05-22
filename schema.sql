@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION after_products_count_update()
   RETURNS TRIGGER AS
 $$
 BEGIN
---   TODO: publish to NATS
+  perform nats_status();
   RETURN NEW;
 END;
 $$
