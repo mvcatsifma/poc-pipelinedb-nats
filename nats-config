@@ -1,0 +1,6 @@
+partitioning: true
+store_limits: {
+    channels: {
+        "products": {}
+    }
+}

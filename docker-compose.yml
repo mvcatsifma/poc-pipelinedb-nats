@@ -1,0 +1,49 @@
+version: '3.5'
+
+networks:
+  default:
+
+services:
+  broker:
+    # -m set the HTTP PORT for monitoring
+    # -D enable debugging output
+    # -V trace the raw protocol
+    # -sc streaming server config file
+    command: ["-m", "8222", "-D", "-V", "-sc", "/run/secrets/nats-config"]
+    image: nats-streaming
+    networks:
+      default:
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+      - "6222:6222"
+    secrets:
+      - nats-config
+  database:
+    build: .
+    command: [
+      "postgres",
+      "-c", "log_destination=stderr",
+      "-c", "client_min_messages=error",
+      "-c", "log_min_messages=error",
+      "-c", "log_min_error_statement=error"
+    ]
+    depends_on:
+      - broker
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      default:
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+volumes:
+  pg-data:
+
+secrets:
+  nats-config:
+    file: nats-config
